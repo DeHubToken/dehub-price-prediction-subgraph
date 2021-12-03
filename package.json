@@ -8,13 +8,15 @@
     "build": "graph build",
     "format:check": "prettier --check '*/**/*.{js,ts}'",
     "format:write": "prettier --write '*/**/*.{js,ts}'",
-    "deploy": "yarn graph deploy sbvhev/prediction_dehub_test --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token 9d1c21d590874c05a732c2cd56c3b5a4"
+    "deploy:testnet": "yarn graph deploy sbvhev/prediction_dehub_test --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token $(dotenv -p SUBGRAPH_TOKEN_TESTNET)",
+    "deploy:mainnet": "yarn graph deploy dehubtoken/dehub-prediction --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token $(dotenv -p SUBGRAPH_TOKEN_MAINNET)"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.16.0",
     "@graphprotocol/graph-ts": "^0.16.0",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
+    "dotenv": "^10.0.0",
     "eslint": "^6.2.2",
     "eslint-config-prettier": "^6.1.0",
     "prettier": "^1.18.2",
