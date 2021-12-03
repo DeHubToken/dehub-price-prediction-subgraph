@@ -19,7 +19,7 @@ let ZERO_BI = BigInt.fromI32(0)
 let ONE_BI = BigInt.fromI32(1)
 let ZERO_BD = BigDecimal.fromString('0')
 let EIGHT_BD = BigDecimal.fromString('1e8')
-let EIGHTEEN_BD = BigDecimal.fromString('1e18')
+let FIVE_BD = BigDecimal.fromString('1e5')
 
 // Prediction fees
 let BASE_REWARD_RATE = BigInt.fromI32(3)
@@ -207,8 +207,8 @@ export function handleBetBull(event: BetBull): void {
   }
   market.totalBets = market.totalBets.plus(ONE_BI)
   market.totalBetsBull = market.totalBetsBull.plus(ONE_BI)
-  market.totalETH = market.totalETH.plus(event.params.amount.divDecimal(EIGHTEEN_BD))
-  market.totalETHBull = market.totalETHBull.plus(event.params.amount.divDecimal(EIGHTEEN_BD))
+  market.totalETH = market.totalETH.plus(event.params.amount.divDecimal(FIVE_BD))
+  market.totalETHBull = market.totalETHBull.plus(event.params.amount.divDecimal(FIVE_BD))
   market.save()
 
   let round = Round.load(event.params.currentEpoch.toString())
@@ -216,9 +216,9 @@ export function handleBetBull(event: BetBull): void {
     log.error('Tried to bet (bull) without an existing round (epoch: {}).', [event.params.currentEpoch.toString()])
   }
   round.totalBets = round.totalBets.plus(ONE_BI)
-  round.totalAmount = round.totalAmount.plus(event.params.amount.divDecimal(EIGHTEEN_BD))
+  round.totalAmount = round.totalAmount.plus(event.params.amount.divDecimal(FIVE_BD))
   round.bullBets = round.bullBets.plus(ONE_BI)
-  round.bullAmount = round.bullAmount.plus(event.params.amount.divDecimal(EIGHTEEN_BD))
+  round.bullAmount = round.bullAmount.plus(event.params.amount.divDecimal(FIVE_BD))
   round.save()
 
   // Fail safe condition in case the user has not been created yet.
@@ -237,7 +237,7 @@ export function handleBetBull(event: BetBull): void {
   }
   user.updatedAt = event.block.timestamp
   user.totalBets = user.totalBets.plus(ONE_BI)
-  user.totalETH = user.totalETH.plus(event.params.amount.divDecimal(EIGHTEEN_BD))
+  user.totalETH = user.totalETH.plus(event.params.amount.divDecimal(FIVE_BD))
   user.save()
 
   let betId = concat(event.params.sender, Bytes.fromI32(event.params.currentEpoch.toI32())).toHex()
@@ -245,7 +245,7 @@ export function handleBetBull(event: BetBull): void {
   bet.round = round.id
   bet.user = user.id
   bet.hash = event.transaction.hash
-  bet.amount = event.params.amount.divDecimal(EIGHTEEN_BD)
+  bet.amount = event.params.amount.divDecimal(FIVE_BD)
   bet.position = 'Bull'
   bet.claimed = false
   bet.createdAt = event.block.timestamp
@@ -261,8 +261,8 @@ export function handleBetBear(event: BetBear): void {
   }
   market.totalBets = market.totalBets.plus(ONE_BI)
   market.totalBetsBear = market.totalBetsBear.plus(ONE_BI)
-  market.totalETH = market.totalETH.plus(event.params.amount.divDecimal(EIGHTEEN_BD))
-  market.totalETHBear = market.totalETHBear.plus(event.params.amount.divDecimal(EIGHTEEN_BD))
+  market.totalETH = market.totalETH.plus(event.params.amount.divDecimal(FIVE_BD))
+  market.totalETHBear = market.totalETHBear.plus(event.params.amount.divDecimal(FIVE_BD))
   market.save()
 
   let round = Round.load(event.params.currentEpoch.toString())
@@ -270,9 +270,9 @@ export function handleBetBear(event: BetBear): void {
     log.error('Tried to bet (bear) without an existing round (epoch: {}).', [event.params.currentEpoch.toString()])
   }
   round.totalBets = round.totalBets.plus(ONE_BI)
-  round.totalAmount = round.totalAmount.plus(event.params.amount.divDecimal(EIGHTEEN_BD))
+  round.totalAmount = round.totalAmount.plus(event.params.amount.divDecimal(FIVE_BD))
   round.bearBets = round.bearBets.plus(ONE_BI)
-  round.bearAmount = round.bearAmount.plus(event.params.amount.divDecimal(EIGHTEEN_BD))
+  round.bearAmount = round.bearAmount.plus(event.params.amount.divDecimal(FIVE_BD))
   round.save()
 
   // Fail safe condition in case the user has not been created yet.
@@ -291,7 +291,7 @@ export function handleBetBear(event: BetBear): void {
   }
   user.updatedAt = event.block.timestamp
   user.totalBets = user.totalBets.plus(ONE_BI)
-  user.totalETH = user.totalETH.plus(event.params.amount.divDecimal(EIGHTEEN_BD))
+  user.totalETH = user.totalETH.plus(event.params.amount.divDecimal(FIVE_BD))
   user.save()
 
   let betId = concat(event.params.sender, Bytes.fromI32(event.params.currentEpoch.toI32())).toHex()
@@ -299,7 +299,7 @@ export function handleBetBear(event: BetBear): void {
   bet.round = round.id
   bet.user = user.id
   bet.hash = event.transaction.hash
-  bet.amount = event.params.amount.divDecimal(EIGHTEEN_BD)
+  bet.amount = event.params.amount.divDecimal(FIVE_BD)
   bet.position = 'Bear'
   bet.claimed = false
   bet.createdAt = event.block.timestamp
@@ -313,7 +313,7 @@ export function handleClaim(event: Claim): void {
   let bet = Bet.load(betId)
   if (bet !== null) {
     bet.claimed = true
-    bet.claimedAmount = event.params.amount.divDecimal(EIGHTEEN_BD)
+    bet.claimedAmount = event.params.amount.divDecimal(FIVE_BD)
     bet.claimedHash = event.transaction.hash
     bet.updatedAt = event.block.timestamp
     bet.save()
@@ -325,7 +325,7 @@ export function handleRewardsCalculated(event: RewardsCalculated): void {
   if (market === null) {
     log.error('Tried query market after rewards were calculated for a round', [])
   }
-  market.totalETHTreasury = market.totalETHTreasury.plus(event.params.treasuryAmount.divDecimal(EIGHTEEN_BD))
+  market.totalETHTreasury = market.totalETHTreasury.plus(event.params.treasuryAmount.divDecimal(FIVE_BD))
   market.save()
 
   let round = Round.load(event.params.epoch.toString())
@@ -334,6 +334,6 @@ export function handleRewardsCalculated(event: RewardsCalculated): void {
       event.params.epoch.toString()
     ])
   }
-  round.totalAmountTreasury = event.params.treasuryAmount.divDecimal(EIGHTEEN_BD)
+  round.totalAmountTreasury = event.params.treasuryAmount.divDecimal(FIVE_BD)
   round.save()
 }

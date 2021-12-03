@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Prediction
-    network: rinkeby
+    network: chapel
     source:
-      address: '0xC8bD92Ba3d77b5dad6b597a603C6eDEd9f2c07f0'
+      address: '0x805Ae00834D1D8fD3ba65784A335C42366b7ecfb'
       abi: Prediction
-      startBlock: 6950840
+      startBlock: 14409300
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
