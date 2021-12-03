@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Prediction
-    network: chapel
+    network: bsc
     source:
-      address: '0x805Ae00834D1D8fD3ba65784A335C42366b7ecfb'
+      address: '0xC09411b2eA0aBd5532170585b3AbBF7d6A7c500b'
       abi: Prediction
-      startBlock: 14409300
+      startBlock: 13133650
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
